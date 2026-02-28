@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Task Report - Task Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-file-alt"></i> Task Report</h1>
+            <a href="{% url 'admin_panel:task_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Tasks
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{{ task.title }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Assigned To:</strong> {{ task.assigned_to.username }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Created By:</strong> {{ task.created_by.username }}
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Due Date:</strong> {{ task.due_date|date:"Y-m-d H:i" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Status:</strong> 
+                        <span class="badge bg-success">{{ task.get_status_display }}</span>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Worked Hours:</strong> {{ task.worked_hours }} hours
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Completed On:</strong> {{ task.updated_at|date:"Y-m-d H:i" }}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Description:</strong>
+                    <p class="mt-2">{{ task.description|default:"No description provided." }}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Completion Report:</strong>
+                    <div class="mt-2 p-3 bg-light rounded">
+                        {{ task.completion_report|linebreaks }}
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{% url 'admin_panel:task_update' task.id %}" class="btn btn-outline-primary">
+                        <i class="fas fa-edit"></i> Edit Task
+                    </a>
+                    <a href="{% url 'admin_panel:task_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-list"></i> Back to Tasks
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Task Summary</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Task ID:</span>
+                        <strong>#{{ task.id }}</strong>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Status:</span>
+                        <span class="badge bg-success">{{ task.get_status_display }}</span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Worked Hours:</span>
+                        <strong>{{ task.worked_hours }}h</strong>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Created:</span>
+                        <strong>{{ task.created_at|date:"Y-m-d" }}</strong>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Last Updated:</span>
+                        <strong>{{ task.updated_at|date:"Y-m-d" }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Task Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-user"></i> {{ title }}</h1>
+            <a href="{% url 'admin_panel:user_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Users
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger">{{ form.first_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger">{{ form.last_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.role.id_for_label }}" class="form-label">Role</label>
+                                {{ form.role }}
+                                {% if form.role.errors %}
+                                    <div class="text-danger">{{ form.role.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.assigned_admin.id_for_label }}" class="form-label">Assigned Admin</label>
+                                {{ form.assigned_admin }}
+                                {% if form.assigned_admin.errors %}
+                                    <div class="text-danger">{{ form.assigned_admin.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Only applicable for users. Leave empty for admins/superadmins.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                                {{ form.password }}
+                                {% if form.password.errors %}
+                                    <div class="text-danger">{{ form.password.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Leave empty to keep current password.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.password_confirm.id_for_label }}" class="form-label">Confirm Password</label>
+                                {{ form.password_confirm }}
+                                {% if form.password_confirm.errors %}
+                                    <div class="text-danger">{{ form.password_confirm.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.is_active }}
+                            <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                Active
+                            </label>
+                        </div>
+                    </div>
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save User
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const roleSelect = document.getElementById('{{ form.role.id_for_label }}');
+    const assignedAdminField = document.getElementById('{{ form.assigned_admin.id_for_label }}').closest('.mb-3');
+    
+    function toggleAssignedAdmin() {
+        if (roleSelect.value === 'user') {
+            assignedAdminField.style.display = 'block';
+        } else {
+            assignedAdminField.style.display = 'none';
+        }
+    }
+    
+    roleSelect.addEventListener('change', toggleAssignedAdmin);
+    toggleAssignedAdmin();
+});
+</script>
+{% endblock %}

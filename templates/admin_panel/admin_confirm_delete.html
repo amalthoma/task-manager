@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Admin - Task Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="fas fa-trash"></i> Delete Admin</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Danger:</strong> Are you sure you want to delete this admin? This action cannot be undone and may affect assigned users.
+                </div>
+                
+                <h5>Admin Details:</h5>
+                <ul>
+                    <li><strong>Username:</strong> {{ admin.username }}</li>
+                    <li><strong>Email:</strong> {{ admin.email }}</li>
+                    <li><strong>Name:</strong> {{ admin.first_name }} {{ admin.last_name }}</li>
+                    <li><strong>Role:</strong> {{ admin.get_role_display }}</li>
+                </ul>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Yes, Delete Admin
+                    </button>
+                    <a href="{% url 'admin_panel:admin_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Admins - Task Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-user-shield"></i> Admins</h1>
+            <a href="{% url 'admin_panel:admin_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Admin
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% if admins %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for admin in admins %}
+                                <tr>
+                                    <td>{{ admin.username }}</td>
+                                    <td>{{ admin.email }}</td>
+                                    <td>{{ admin.first_name }} {{ admin.last_name }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if admin.userprofile.role == 'superadmin' %}danger{% else %}warning{% endif %}">
+                                            {{ admin.userprofile.get_role_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if admin.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ admin.userprofile.created_at|date:"Y-m-d" }}</td>
+                                    <td>
+                                        <a href="{% url 'admin_panel:admin_update' admin.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if admin.userprofile.role != 'superadmin' or admin.id != user.id %}
+                                            <a href="{% url 'admin_panel:admin_delete' admin.id %}" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No admins found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

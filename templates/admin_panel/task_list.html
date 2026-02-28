@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Tasks - Task Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-tasks"></i> Tasks</h1>
+            {% if user.userprofile and user.userprofile.role != 'user' %}
+                <a href="{% url 'admin_panel:task_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Task
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% if tasks %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Assigned To</th>
+                                    <th>Created By</th>
+                                    <th>Status</th>
+                                    <th>Due Date</th>
+                                    <th>Worked Hours</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in tasks %}
+                                <tr>
+                                    <td>{{ task.title }}</td>
+                                    <td>{{ task.description|truncatewords:10 }}</td>
+                                    <td>{{ task.assigned_to.username }}</td>
+                                    <td>{{ task.created_by.username }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if task.status == 'completed' %}success{% elif task.status == 'in_progress' %}warning{% else %}secondary{% endif %}">
+                                            {{ task.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ task.due_date|date:"Y-m-d H:i" }}</td>
+                                    <td>
+                                        {% if task.worked_hours %}
+                                            {{ task.worked_hours }}h
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'admin_panel:task_update' task.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if task.status == 'completed' %}
+                                            <a href="{% url 'admin_panel:task_report' task.id %}" class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-file-alt"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No tasks found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
